@@ -8,11 +8,11 @@ import java.io.File;
 @Data
 public class Sound {
 
-    private File sound;
+    private File soundFile;
 
     private String name;
 
-    public Sound(File sound) {
-        this.sound = sound;
+    public Sound(File file) {
+        this.soundFile = file;
     }
 }

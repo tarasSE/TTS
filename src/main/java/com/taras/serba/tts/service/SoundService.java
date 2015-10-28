@@ -5,9 +5,10 @@ import com.taras.serba.tts.model.TextToSpeechURL;
 import com.taras.serba.tts.model.enums.Format;
 import com.taras.serba.tts.model.enums.Lang;
 import com.taras.serba.tts.model.enums.Speaker;
+import org.apache.commons.io.FileUtils;
 
-import java.io.*;
-import java.net.HttpURLConnection;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 
@@ -15,48 +16,11 @@ public class SoundService {
 
     public Sound getSoundByURL(final URL url) {
 
-        HttpURLConnection httpURLConnection = null;
-
-        BufferedInputStream bufferedInputStream = null;
-
-        BufferedOutputStream bufferedOutputStream = null;
-
-        File file = null;
-
-        int next = 0;
-
-
+        File file = new File("/home/taras/IdeaProjects/TTS/src/main/resources/sounds/" + new Date().toString() + ".mp3");
         try {
-
-            httpURLConnection = (HttpURLConnection) url.openConnection();
-
-            httpURLConnection.setRequestMethod("GET");
-
-            httpURLConnection.setRequestProperty("User-Agent",
-                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36");
-
-            httpURLConnection.connect();
-
-            bufferedInputStream = new BufferedInputStream(url.openStream());
-
-            file = new File(
-                    "/home/taras/IdeaProjects/TTS/src/main/resources/sounds/"
-                            + new Date().toString() + ".mp3");
-
-            bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file));
-
-            while ((next = bufferedInputStream.read()) != -1) {
-
-                bufferedOutputStream.write(next);
-
-            }
-
-            bufferedInputStream.close();
-            ;
-            bufferedOutputStream.close();
-
+            FileUtils.copyURLToFile(url, file);
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return new Sound(file);
 
@@ -77,6 +41,8 @@ public class SoundService {
         URL soundURL = textToSpeechURL.toURL();
 
         System.out.println(soundURL);
+
+        soundService.getSoundByURL(soundURL);
 
     }
 }
